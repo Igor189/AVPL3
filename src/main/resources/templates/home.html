@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Файлы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ADD8E6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            width: 50%;
+        }
+        .header {
+            text-align: left;
+            color: #007bff;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-container {
+            display: none;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Файлы</h1>
+    </div>
+    <div th:if="${message}" th:class="'message ' + (${message.startsWith('Error') ? 'error' : 'success'})"
+         th:text="${message}"></div>
+    <button id="addFileButton">Создать файл</button>
+    <div id="addFileForm" class="form-container">
+        <form action="/" method="post">
+            <input type="text" name="filename" placeholder="Введите название файла" required />
+            <button type="submit">Создать</button>
+        </form>
+    </div>
+    <ul>
+        <li th:each="file : ${files}">
+            <div>
+                <a th:href="@{'/code-editor/' + ${file}}" th:text="${file}"></a>
+            </div>
+            <div>
+                <button class="renameButton">Переименовать</button>
+                <div class="form-container">
+                    <form th:action="@{'/' + ${file}}" th:method="put">
+                        <input type="hidden" name="oldFilename" th:value="${file}" />
+                        <input type="text" name="newFilename" placeholder="Введите новое имя файла" required />
+                        <button type="submit">Ок</button>
+                    </form>
+                </div>
+                <form th:action="@{'/' + ${file}}" th:method="delete">
+                    <input type="hidden" name="filename" th:value="${file}" />
+                    <button type="submit">Удалить</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#addFileButton").click(function() {
+            $("#addFileForm").toggle();
+        });
+        $(".renameButton").click(function() {
+            $(this).next(".form-container").toggle();
+        });
+    });
+</script>
+</body>
+</html>

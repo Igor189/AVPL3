@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Редактор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ADD8E6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            height: 70%;
+        }
+        .header {
+            text-align: left;
+            color: #007bff;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+        textarea {
+            width: 100%;
+            height: 50vh;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Редактор</h1>
+    </div>
+    <div th:if="${message}" th:class="'message ' + (${message.startsWith('Error') ? 'error' : 'success'})"
+         th:text="${message}"></div>
+    <button onclick="window.location.href='/';">К файлам</button>
+    <form th:action="@{'/code-editor/' + ${file}}" th:method="put">
+        <textarea name="fileContent" th:text="${fileContent}"></textarea>
+        <button type="submit">Сохранить</button>
+        <button type="button">Открыть в новой вкладке</button>
+    </form>
+</div>
+<script>
+    document.querySelector('button[type="button"]').addEventListener('click', function() {
+        let htmlContent = document.querySelector('textarea[name="fileContent"]').value;
+        let newWindow = window.open("", "_blank");
+        newWindow.document.write(htmlContent);
+        newWindow.document.close();
+    });
+</script>
+</body>
+</html>
